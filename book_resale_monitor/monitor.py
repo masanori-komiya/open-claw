@@ -59,8 +59,8 @@ def fetch_html(url: str, cfg: Dict[str, Any]) -> str:
                     locale="ja-JP",
                 )
                 page = context.new_page()
-                page.goto(url, wait_until="domcontentloaded", timeout=30000)
-                page.wait_for_timeout(1500)
+                page.goto(url, wait_until="domcontentloaded", timeout=int(cfg.get("playwright_timeout_ms", 20000)))
+                page.wait_for_timeout(int(cfg.get("playwright_wait_ms", 1000)))
                 html = page.content()
                 context.close()
                 browser.close()
@@ -68,7 +68,7 @@ def fetch_html(url: str, cfg: Dict[str, Any]) -> str:
         except Exception:
             pass
 
-    r = requests.get(url, headers=headers(cfg), timeout=25)
+    r = requests.get(url, headers=headers(cfg), timeout=int(cfg.get("http_timeout_sec", 20)))
     r.raise_for_status()
     return r.text
 
@@ -239,7 +239,8 @@ def load_rare_items_keywords(cfg: Dict[str, Any]) -> List[str]:
 
     # dedupe while preserving order
     deduped = list(dict.fromkeys(terms))
-    return deduped
+    limit = int(cfg.get("max_rare_terms", 40))
+    return deduped[:limit]
 
 
 def main() -> None:

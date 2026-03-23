@@ -43,5 +43,9 @@
   "use_playwright": true,
   "use_rare_items": true,
   "rare_items_path": "rare_items.json",
+  "max_rare_terms": 40,
+  "playwright_timeout_ms": 20000,
+  "playwright_wait_ms": 1000,
+  "http_timeout_sec": 20,
   "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
 }

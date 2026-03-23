@@ -61,4 +61,8 @@ python3 -m venv venv
 
 - キーワード: `config.json` の `keywords`
 - 利益条件: `min_profit_yen`, `min_profit_rate`
+- タイムアウト調整:
+  - `playwright_timeout_ms`（ページ読み込み上限）
+  - `playwright_wait_ms`（描画待機）
+  - `http_timeout_sec`（フォールバックHTTP上限）
 - ソース追加: `monitor.py` にスクレイパーを追加
