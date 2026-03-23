@@ -10,6 +10,11 @@ from typing import Any, Dict, List
 import requests
 from bs4 import BeautifulSoup
 
+try:
+    from playwright.sync_api import sync_playwright
+except Exception:
+    sync_playwright = None
+
 
 @dataclass
 class Listing:
@@ -43,12 +48,36 @@ def normalize_price(value: Any) -> int:
     return int(digits) if digits else 0
 
 
-def scrape_mercari(keyword: str, cfg: Dict[str, Any]) -> List[Listing]:
-    url = f"https://jp.mercari.com/search?keyword={urllib.parse.quote(keyword)}"
+def fetch_html(url: str, cfg: Dict[str, Any]) -> str:
+    use_playwright = cfg.get("use_playwright", True)
+    if use_playwright and sync_playwright is not None:
+        try:
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True)
+                context = browser.new_context(
+                    user_agent=cfg["user_agent"],
+                    locale="ja-JP",
+                )
+                page = context.new_page()
+                page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                page.wait_for_timeout(1500)
+                html = page.content()
+                context.close()
+                browser.close()
+                return html
+        except Exception:
+            pass
+
     r = requests.get(url, headers=headers(cfg), timeout=25)
     r.raise_for_status()
+    return r.text
 
-    soup = BeautifulSoup(r.text, "html.parser")
+
+def scrape_mercari(keyword: str, cfg: Dict[str, Any]) -> List[Listing]:
+    url = f"https://jp.mercari.com/search?keyword={urllib.parse.quote(keyword)}"
+    html = fetch_html(url, cfg)
+
+    soup = BeautifulSoup(html, "html.parser")
     script = soup.find("script", id="__NEXT_DATA__")
     if not script or not script.string:
         return []
@@ -85,12 +114,14 @@ def scrape_mercari(keyword: str, cfg: Dict[str, Any]) -> List[Listing]:
 
 def scrape_yahoo_auctions(keyword: str, cfg: Dict[str, Any]) -> List[Listing]:
     url = f"https://auctions.yahoo.co.jp/search/search?p={urllib.parse.quote(keyword)}"
-    r = requests.get(url, headers=headers(cfg), timeout=25)
-    if r.status_code == 404:
-        return []
-    r.raise_for_status()
+    try:
+        html = fetch_html(url, cfg)
+    except requests.HTTPError as e:
+        if "404" in str(e):
+            return []
+        raise
 
-    soup = BeautifulSoup(r.text, "html.parser")
+    soup = BeautifulSoup(html, "html.parser")
     listings: List[Listing] = []
 
     for a in soup.select("a.Product__titleLink, a.Product__title"):

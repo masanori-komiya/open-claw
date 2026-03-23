@@ -40,5 +40,6 @@
   "shipping_yen": 210,
   "sources": ["mercari", "yahoo_auctions"],
   "max_items_per_source": 20,
+  "use_playwright": true,
   "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
 }
