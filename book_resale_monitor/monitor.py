@@ -86,6 +86,8 @@ def scrape_mercari(keyword: str, cfg: Dict[str, Any]) -> List[Listing]:
 def scrape_yahoo_auctions(keyword: str, cfg: Dict[str, Any]) -> List[Listing]:
     url = f"https://auctions.yahoo.co.jp/search/search?p={urllib.parse.quote(keyword)}"
     r = requests.get(url, headers=headers(cfg), timeout=25)
+    if r.status_code == 404:
+        return []
     r.raise_for_status()
 
     soup = BeautifulSoup(r.text, "html.parser")

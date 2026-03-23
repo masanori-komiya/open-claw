@@ -4,7 +4,7 @@
 
 ## 設定済み条件
 
-- 対象: 物理系キーワード
+- 対象: 物理系 / 医学系 / 情報系 / 化学系 / 洋書キーワード
 - 最低利益額: 1000円
 - 最低利益率: 15%
 - 実行時刻: 7:00 / 13:00 / 21:00（cron）
@@ -49,6 +49,11 @@ python3 -m venv venv
 ```cron
 0 7,13,21 * * * cd /Users/norinori/.openclaw/workspace/book_resale_monitor && /bin/bash /Users/norinori/.openclaw/workspace/book_resale_monitor/run.sh >> /Users/norinori/.openclaw/workspace/book_resale_monitor/output/cron.log 2>&1
 ```
+
+## 珍しいものリスト
+
+- `rare_items_seed.md` に高値化しやすい候補をカテゴリ別で整理済み
+- ここからキーワードを `config.json` に追加して精度を上げられます
 
 ## 調整ポイント
 
