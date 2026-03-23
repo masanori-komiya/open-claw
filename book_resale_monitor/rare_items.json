@@ -1,0 +1,10 @@
+[
+  {"title":"The Art of Computer Programming", "author":"Donald E. Knuth", "isbn":"9780201896831", "aliases":["TAOCP", "Knuth"]},
+  {"title":"Structure and Interpretation of Computer Programs", "author":"Harold Abelson", "isbn":"9780262510875", "aliases":["SICP", "MIT Press"]},
+  {"title":"Compilers: Principles, Techniques, and Tools", "author":"Aho", "isbn":"9780321486813", "aliases":["Dragon Book", "コンパイラ ドラゴンブック"]},
+  {"title":"Gray's Anatomy", "author":"Susan Standring", "isbn":"9780702077050", "aliases":["グレイ解剖学"]},
+  {"title":"Robbins and Cotran Pathologic Basis of Disease", "author":"Kumar", "isbn":"9780323531139", "aliases":["Robbins Pathology"]},
+  {"title":"Jackson Classical Electrodynamics", "author":"J. D. Jackson", "isbn":"9780471309321", "aliases":["ジャクソン 電磁気学"]},
+  {"title":"Landau and Lifshitz Course of Theoretical Physics", "author":"Landau", "isbn":"9780750635394", "aliases":["ランダウ 力学", "Landau Lifshitz"]},
+  {"title":"March's Advanced Organic Chemistry", "author":"Michael B. Smith", "isbn":"9781119371809", "aliases":["March 有機化学"]}
+]

@@ -210,11 +210,44 @@ def analyze_keyword(keyword: str, cfg: Dict[str, Any]) -> Dict[str, Any]:
     return {"keyword": keyword, "candidates": [candidate] if ok else [], "errors": errors}
 
 
+def load_rare_items_keywords(cfg: Dict[str, Any]) -> List[str]:
+    if not cfg.get("use_rare_items", False):
+        return []
+    path = ROOT / cfg.get("rare_items_path", "rare_items.json")
+    if not path.exists():
+        return []
+    with open(path, "r", encoding="utf-8") as f:
+        items = json.load(f)
+
+    terms: List[str] = []
+    for item in items:
+        title = str(item.get("title", "")).strip()
+        author = str(item.get("author", "")).strip()
+        isbn = str(item.get("isbn", "")).strip()
+        aliases = item.get("aliases", []) or []
+
+        if title:
+            terms.append(title)
+        if title and author:
+            terms.append(f"{title} {author}")
+        if isbn:
+            terms.append(isbn)
+        for a in aliases:
+            a = str(a).strip()
+            if a:
+                terms.append(a)
+
+    # dedupe while preserving order
+    deduped = list(dict.fromkeys(terms))
+    return deduped
+
+
 def main() -> None:
     cfg = load_config()
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    results = [analyze_keyword(k, cfg) for k in cfg["keywords"]]
+    merged_keywords = list(dict.fromkeys(cfg["keywords"] + load_rare_items_keywords(cfg)))
+    results = [analyze_keyword(k, cfg) for k in merged_keywords]
     candidates = [c for r in results for c in r["candidates"]]
     errors = [e for r in results for e in r["errors"]]
 

@@ -54,7 +54,8 @@ python3 -m venv venv
 ## 珍しいものリスト
 
 - `rare_items_seed.md` に高値化しやすい候補をカテゴリ別で整理済み
-- ここからキーワードを `config.json` に追加して精度を上げられます
+- `rare_items.json` に ISBN/著者/別名を登録済み（自動検索に使用）
+- `config.json` の `use_rare_items` が true のとき、通常キーワードに加えて ISBN・著者ベースでも検索します
 
 ## 調整ポイント
 
